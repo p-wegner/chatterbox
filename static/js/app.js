@@ -26,7 +26,6 @@ class VoiceTTSApp {
 
         // Text input elements
         this.textInput = document.getElementById('textInput');
-        this.charCount = document.getElementById('charCount');
 
         // Control elements
         this.exaggeration = document.getElementById('exaggeration');
@@ -52,7 +51,6 @@ class VoiceTTSApp {
         this.audioFile.addEventListener('change', (e) => this.handleFileUpload(e));
 
         // Text input events
-        this.textInput.addEventListener('input', () => this.updateCharCount());
         this.textInput.addEventListener('input', () => this.updateGenerateButton());
 
         // Control events
@@ -163,17 +161,10 @@ class VoiceTTSApp {
         }
     }
 
-    updateCharCount() {
-        const count = this.textInput.value.length;
-        this.charCount.textContent = count;
-        
-        if (count > 250) {
-            this.charCount.parentElement.classList.add('warning');
-        } else {
-            this.charCount.parentElement.classList.remove('warning');
-        }
-        
-        this.updateGenerateButton();
+    updateGenerateButton() {
+        const hasAudio = this.recordedBlob !== null;
+        const hasText = this.textInput.value.trim().length > 0;
+        this.generateBtn.disabled = !(hasAudio && hasText);
     }
 
     updateExaggerationValue() {
@@ -194,7 +185,6 @@ class VoiceTTSApp {
     updateGenerateButton() {
         const hasAudio = this.recordedBlob !== null;
         const hasText = this.textInput.value.trim().length > 0;
-        
         this.generateBtn.disabled = !(hasAudio && hasText);
     }
 
