@@ -12,18 +12,24 @@ A simple web application that allows users to record audio samples and use Chatt
 
 ## Quick Start
 
-1. **Install dependencies**:
+1. **Install dependencies using Poetry**:
    ```bash
-   pip install -r requirements.txt
+   poetry install
    ```
 
 2. **Run the application**:
    ```bash
-   python voice_tts_app.py
+   poetry run python voice_tts_app.py
    ```
 
 3. **Open your browser**:
    Navigate to `http://localhost:5000`
+
+Alternatively, you can install dependencies directly:
+```bash
+pip install chatterbox-tts flask
+python voice_tts_app.py
+```
 
 ## Usage
 
@@ -38,6 +44,7 @@ A simple web application that allows users to record audio samples and use Chatt
 - Python 3.10+
 - Modern web browser with microphone access
 - Chatterbox TTS library (automatically installed)
+- Poetry (recommended) or pip for dependency management
 
 ## Browser Support
 
@@ -66,7 +73,11 @@ static/
   └── js/
       └── app.js         # Frontend JavaScript
 uploads/                 # Temporary audio file storage
-requirements.txt         # Python dependencies
+pyproject.toml          # Poetry project configuration
+poetry.lock             # Poetry lock file
+requirements.txt         # Pip-compatible dependencies
+README_WEBAPP.md        # Web app documentation
+INSTALLATION_GUIDE.md   # Detailed installation guide
 ```
 
 ## Troubleshooting
