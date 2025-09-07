@@ -33,6 +33,7 @@ class VoiceTTSApp {
         this.exaggerationValue = document.getElementById('exaggerationValue');
         this.temperature = document.getElementById('temperature');
         this.temperatureValue = document.getElementById('temperatureValue');
+        this.languageSelect = document.getElementById('languageSelect');
         this.resetBtn = document.getElementById('resetBtn');
 
         // Generation elements
@@ -210,6 +211,7 @@ class VoiceTTSApp {
             const formData = new FormData();
             formData.append('audio', this.recordedBlob);
             formData.append('text', this.textInput.value);
+            formData.append('language', this.languageSelect.value);
             formData.append('exaggeration', this.exaggeration.value);
             formData.append('temperature', this.temperature.value);
 

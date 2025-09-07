@@ -4,6 +4,7 @@ import tempfile
 from werkzeug.utils import secure_filename
 import torch
 from chatterbox.tts import ChatterboxTTS
+from chatterbox.mtl_tts import ChatterboxMultilingualTTS
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -16,27 +17,64 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 print(f"Running on device: {DEVICE}")
 
-# Global model instance
-model = None
+# Supported languages
+SUPPORTED_LANGUAGES = {
+    'ar': 'Arabic',
+    'da': 'Danish', 
+    'de': 'German',
+    'el': 'Greek',
+    'en': 'English',
+    'es': 'Spanish',
+    'fi': 'Finnish',
+    'fr': 'French',
+    'he': 'Hebrew',
+    'hi': 'Hindi',
+    'it': 'Italian',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'ms': 'Malay',
+    'nl': 'Dutch',
+    'no': 'Norwegian',
+    'pl': 'Polish',
+    'pt': 'Portuguese',
+    'ru': 'Russian',
+    'sv': 'Swedish',
+    'sw': 'Swahili',
+    'tr': 'Turkish',
+    'zh': 'Chinese'
+}
 
-def load_model():
-    global model
-    if model is None:
-        print("Loading Chatterbox TTS model...")
-        model = ChatterboxTTS.from_pretrained(DEVICE)
-        print("Model loaded successfully!")
-    return model
+# Global model instances
+english_model = None
+multilingual_model = None
+
+def load_english_model():
+    global english_model
+    if english_model is None:
+        print("Loading Chatterbox English TTS model...")
+        english_model = ChatterboxTTS.from_pretrained(DEVICE)
+        print("English model loaded successfully!")
+    return english_model
+
+def load_multilingual_model():
+    global multilingual_model
+    if multilingual_model is None:
+        print("Loading Chatterbox Multilingual TTS model...")
+        multilingual_model = ChatterboxMultilingualTTS.from_pretrained(DEVICE)
+        print("Multilingual model loaded successfully!")
+    return multilingual_model
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', supported_languages=SUPPORTED_LANGUAGES)
 
 @app.route('/health')
 def health():
     return jsonify({
         "status": "healthy", 
         "device": DEVICE,
-        "chatterbox_available": True
+        "chatterbox_available": True,
+        "supported_languages": SUPPORTED_LANGUAGES
     })
 
 @app.route('/favicon.ico')
@@ -53,6 +91,7 @@ def generate_tts():
         
         audio_file = request.files['audio']
         text = request.form['text']
+        language = request.form.get('language', 'en')
         exaggeration = float(request.form.get('exaggeration', 0.5))
         temperature = float(request.form.get('temperature', 0.8))
         
@@ -67,20 +106,32 @@ def generate_tts():
         audio_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         audio_file.save(audio_path)
         
-        # Load model if not already loaded
-        model = load_model()
-        
-        # Generate TTS
-        wav = model.generate(
-            text=text,
-            audio_prompt_path=audio_path,
-            exaggeration=exaggeration,
-            temperature=temperature,
-            cfg_weight=0.5,
-            min_p=0.05,
-            top_p=1.0,
-            repetition_penalty=1.2
-        )
+        # Load appropriate model based on language
+        if language == 'en':
+            model = load_english_model()
+            wav = model.generate(
+                text=text,
+                audio_prompt_path=audio_path,
+                exaggeration=exaggeration,
+                temperature=temperature,
+                cfg_weight=0.5,
+                min_p=0.05,
+                top_p=1.0,
+                repetition_penalty=1.2
+            )
+        else:
+            model = load_multilingual_model()
+            wav = model.generate(
+                text=text,
+                language_id=language,
+                audio_prompt_path=audio_path,
+                exaggeration=exaggeration,
+                temperature=temperature,
+                cfg_weight=0.5,
+                min_p=0.05,
+                top_p=1.0,
+                repetition_penalty=1.2
+            )
         
         # Convert to bytes
         import io

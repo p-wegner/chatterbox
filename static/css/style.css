@@ -228,6 +228,40 @@ section h3 {
     min-width: 40px;
 }
 
+/* Language Selection Section */
+.language-section {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.language-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.language-select {
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.language-info {
+    color: #666;
+    font-size: 0.9rem;
+}
+
 /* Generation Section */
 .generation-section {
     text-align: center;
