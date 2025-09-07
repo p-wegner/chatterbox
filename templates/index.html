@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatterbox Voice TTS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 Chatterbox Voice TTS</h1>
+            <p>Record your voice and generate text-to-speech with voice cloning</p>
+        </header>
+
+        <main>
+            <!-- Audio Recording Section -->
+            <section class="recording-section">
+                <h2>1. Record Your Voice</h2>
+                <div class="recording-controls">
+                    <button id="recordBtn" class="btn btn-primary">
+                        🎤 Start Recording
+                    </button>
+                    <button id="stopBtn" class="btn btn-secondary" disabled>
+                        ⏹️ Stop Recording
+                    </button>
+                    <div id="recordingTimer" class="timer">00:00</div>
+                </div>
+                
+                <div class="audio-preview">
+                    <h3>Preview Recording:</h3>
+                    <audio id="recordedAudio" controls style="display: none;"></audio>
+                    <div id="recordingStatus" class="status"></div>
+                </div>
+
+                <div class="file-upload">
+                    <h3>Or upload audio file:</h3>
+                    <input type="file" id="audioFile" accept="audio/*" class="file-input">
+                </div>
+            </section>
+
+            <!-- Text Input Section -->
+            <section class="text-section">
+                <h2>2. Enter Text</h2>
+                <div class="text-input-container">
+                    <textarea 
+                        id="textInput" 
+                        placeholder="Enter the text you want to synthesize..."
+                        maxlength="300"
+                        rows="4"
+                    ></textarea>
+                    <div class="char-counter">
+                        <span id="charCount">0</span>/300 characters
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <h2>3. Adjust Settings</h2>
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="exaggeration">Exaggeration:</label>
+                        <input type="range" id="exaggeration" min="0.25" max="2.0" step="0.05" value="0.5">
+                        <span id="exaggerationValue">0.5</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="temperature">Temperature:</label>
+                        <input type="range" id="temperature" min="0.05" max="5.0" step="0.05" value="0.8">
+                        <span id="temperatureValue">0.8</span>
+                    </div>
+                </div>
+                
+                <button id="resetBtn" class="btn btn-secondary">Reset Settings</button>
+            </section>
+
+            <!-- Generation Section -->
+            <section class="generation-section">
+                <h2>4. Generate TTS</h2>
+                <button id="generateBtn" class="btn btn-primary" disabled>
+                    🎵 Generate TTS
+                </button>
+                <div id="generationStatus" class="status"></div>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section">
+                <h2>5. Result</h2>
+                <div id="outputContainer" class="output-container">
+                    <audio id="outputAudio" controls style="display: none;"></audio>
+                    <button id="downloadBtn" class="btn btn-secondary" style="display: none;">
+                        💾 Download Audio
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
