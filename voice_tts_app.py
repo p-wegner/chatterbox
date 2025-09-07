@@ -39,6 +39,10 @@ def health():
         "chatterbox_available": True
     })
 
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
 @app.route('/generate', methods=['POST'])
 def generate_tts():
     try:

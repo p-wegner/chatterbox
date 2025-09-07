@@ -8,6 +8,7 @@ class VoiceTTSApp {
         this.isRecording = false;
         this.recordingStartTime = null;
         this.recordingTimer = null;
+        this.recordingInterval = null;
         
         this.initializeElements();
         this.setupEventListeners();
@@ -121,7 +122,7 @@ class VoiceTTSApp {
     }
 
     startRecordingTimer() {
-        this.recordingTimer = setInterval(() => {
+        this.recordingInterval = setInterval(() => {
             const elapsed = Math.floor((Date.now() - this.recordingStartTime) / 1000);
             const minutes = Math.floor(elapsed / 60);
             const seconds = elapsed % 60;
@@ -130,9 +131,9 @@ class VoiceTTSApp {
     }
 
     stopRecordingTimer() {
-        if (this.recordingTimer) {
-            clearInterval(this.recordingTimer);
-            this.recordingTimer = null;
+        if (this.recordingInterval) {
+            clearInterval(this.recordingInterval);
+            this.recordingInterval = null;
         }
     }
 
