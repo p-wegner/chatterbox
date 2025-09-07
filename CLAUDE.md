@@ -136,3 +136,23 @@ wav = model.convert_voice(source_audio_path, target_audio_path)
 - Models are optimized for inference speed
 - Default settings work well for most use cases
 - Lower `cfg_weight` for faster speech, higher for more stable output
+
+## Project Tracking and Progress Management
+
+### Progress Tracking
+- **Voice Recording Web App**: Track implementation progress in `docs/progress.md`
+- **Phased Implementation**: 5-phase development plan with detailed task breakdown
+- **Status Updates**: Regular commits when progress.md items are updated
+- **Documentation**: Comprehensive PRD in `docs/prd.md` with requirements and specifications
+
+### Commit Guidelines
+- Always check `docs/progress.md` for current implementation status
+- Commit changes when progress tracking items are updated
+- Include progress phase and task completion in commit messages
+- Reference documentation updates when committing to docs/ directory
+
+### Current Active Projects
+- **Voice Recording TTS Web App**: Flask-based application for recording audio and generating TTS with voice cloning
+  - Status: Planning Phase (see docs/progress.md for details)
+  - Next Step: Begin Phase 1 (Basic Setup)
+  - Technologies: Flask, MediaRecorder API, Chatterbox TTS
