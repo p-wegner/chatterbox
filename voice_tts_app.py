@@ -14,8 +14,15 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Device detection and model setup
-DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-print(f"Running on device: {DEVICE}")
+if torch.cuda.is_available():
+    DEVICE = "cuda"
+    print(f"CUDA detected, using device: {DEVICE}")
+elif torch.backends.mps.is_available():
+    DEVICE = "mps"
+    print(f"Apple Silicon detected, using device: {DEVICE}")
+else:
+    DEVICE = "cpu"
+    print(f"No GPU detected, using device: {DEVICE}")
 
 # Supported languages
 SUPPORTED_LANGUAGES = {
@@ -52,7 +59,14 @@ def load_english_model():
     global english_model
     if english_model is None:
         print("Loading Chatterbox English TTS model...")
-        english_model = ChatterboxTTS.from_pretrained(DEVICE)
+        try:
+            english_model = ChatterboxTTS.from_pretrained(DEVICE)
+        except RuntimeError as e:
+            if "CUDA device" in str(e) and not torch.cuda.is_available():
+                print("CUDA not available, falling back to CPU...")
+                english_model = ChatterboxTTS.from_pretrained("cpu")
+            else:
+                raise e
         print("English model loaded successfully!")
     return english_model
 
@@ -60,7 +74,14 @@ def load_multilingual_model():
     global multilingual_model
     if multilingual_model is None:
         print("Loading Chatterbox Multilingual TTS model...")
-        multilingual_model = ChatterboxMultilingualTTS.from_pretrained(DEVICE)
+        try:
+            multilingual_model = ChatterboxMultilingualTTS.from_pretrained(DEVICE)
+        except RuntimeError as e:
+            if "CUDA device" in str(e) and not torch.cuda.is_available():
+                print("CUDA not available, falling back to CPU...")
+                multilingual_model = ChatterboxMultilingualTTS.from_pretrained("cpu")
+            else:
+                raise e
         print("Multilingual model loaded successfully!")
     return multilingual_model
 
